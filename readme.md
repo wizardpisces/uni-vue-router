@@ -11,20 +11,27 @@ npm install --save uni-vue-router
 
 ```ts
 import Router, { Route, NextFn } from 'uni-vue-router';
+
 Vue.use(Router);
+
 const router = new Router();
+
+new App({
+    router,
+    render: h => h(App),
+}).$mount();
 ```
 ### Basic Usages
 App.vue初始化最初的 $route
 ```ts
- onLaunch(options) {
-     //first time init current route
-        this.$router.transitionTo({
-            path:options && options.path,
-            query:options && options.query
-        });
-        console.log('App Launch');
-    },
+onLaunch(options) {
+  //first time init current route
+     this.$router.transitionTo({
+         path:options && options.path,
+         query:options && options.query
+     });
+     console.log('App Launch');
+ },
 ```
 
 ```ts
