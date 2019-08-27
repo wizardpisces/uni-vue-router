@@ -1,5 +1,5 @@
 #  uni-vue-router
-* router for uniapp based on project file structure ( mainly reference vue-router , nuxt )
+* router for uniapp,based on project file structure ( mainly reference vue-router , nuxt )
 * support typescript
 * support basic vue-router API
 
