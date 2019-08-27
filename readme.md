@@ -2,6 +2,7 @@
 * router for uniapp based on project file structure ( mainly reference vue-router , nuxt )
 * support typescript
 * support basic vue-router API
+
 ###  usages
 
 App.vue初始化最初的 $route
@@ -108,15 +109,16 @@ transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这�
 1. 页面路径不好聚合管理
 2. 无路由钩子
 3. 需要手动拼接参数列表
-4. 参数类型单一，只支持string（不管传string还是number和boolean得到的都是字符串）
-5. 传特殊字符时会发现参数被截断（比如传二维码信息）原因是不能包括（=&?）等特殊字符
-6. 无路由嵌套
+4. 传特殊字符时会发现参数被截断（比如传二维码信息）原因是不能包括（=&?）等特殊字符
+5. 无路由嵌套
+
+### 问题
+
+* router-view （uni-app 访问不到root.$parent）
+* router-link （uni-app 不支持在Vue.install里面挂载组件，所以现在的router-link是无效的）
 
 ### todos
 
 * 完善 模拟的 history stack
 * add tslint, pretty, test
-* router-view （uni-app 访问不到root.$parent）
-* 同一路由判定,在跳转的地方（link.ts和router的跳转里面） isSameRoute
-* 页面跳转路径有层级限制，不能无限制跳转新页面（需要限制住，然后改变路由栈）
 * nested(方便路由钩子权限管理) router
