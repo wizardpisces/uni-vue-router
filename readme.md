@@ -1,5 +1,7 @@
 ##  uni-router
 * router for uniapp based on project file structure ( mainly reference vue-router , nuxt )
+* support typescript
+* support basic vue-router API
 ###  usages
 
 App.vue初始化最初的 $route
@@ -22,11 +24,11 @@ this.$router.push({
 ```
 
 ```ts 
-    @Watch('$route',{
-        immediate: true
-    })function(newVal:Route,oldVal:Route) {
-        console.log('$route changed!',newVal,oldVal,this.$route)
-    }
+@Watch('$route',{
+    immediate: true
+})function(newVal:Route,oldVal:Route) {
+    console.log('$route changed!',newVal,oldVal,this.$route)
+}
 ```
 
 ```ts
@@ -114,7 +116,6 @@ transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这�
 
 * 完善 模拟的 history stack
 * add tslint, pretty, test
-* 打包（排除vue）
 * router-view （uni-app 访问不到root.$parent）
 * 同一路由判定,在跳转的地方（link.ts和router的跳转里面） isSameRoute
 * 页面跳转路径有层级限制，不能无限制跳转新页面（需要限制住，然后改变路由栈）
