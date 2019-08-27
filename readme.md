@@ -1,10 +1,20 @@
-##  uni-router
+#  uni-vue-router
 * router for uniapp based on project file structure ( mainly reference vue-router , nuxt )
 * support typescript
 * support basic vue-router API
 
-###  usages
+### Development setup
 
+```js
+npm install --save uni-vue-router
+```
+
+```ts
+import Router, { Route, NextFn } from 'uni-vue-router';
+Vue.use(Router);
+const router = new Router();
+```
+### Basic Usages
 App.vue初始化最初的 $route
 ```ts
  onLaunch(options) {
