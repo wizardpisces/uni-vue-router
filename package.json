@@ -1,5 +1,5 @@
 {
-  "name": "uniapp-router",
+  "name": "uni-vue-router",
   "version": "1.0.2",
   "description": "uniapp router, vue like API",
   "main": "dist/cjs/index.js",
@@ -18,7 +18,12 @@
     "router",
     "vue-router"
   ],
-  "author": "",
+  "homepage": "https://github.com/wizardpisces/uni-vue-router.git",
+  "repository": {
+    "type": "git",
+    "url": "git+git@github.com:wizardpisces/uni-vue-router.git"
+  },
+  "author": "1275839779@qq.com",
   "license": "MIT",
   "devDependencies": {
     "@types/webpack-env": "^1.14.0",
