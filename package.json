@@ -1,0 +1,39 @@
+{
+  "name": "uniapp-router",
+  "version": "1.0.0",
+  "description": "uniapp router, vue like API",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/src/index.d.ts",
+  "typings": "dist/types/src/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "clean": "rimraf ./dist",
+    "prebuild": "rimraf dist .rpt2_cache",
+    "build": "rollup -c build/rollup.config.js",
+    "release": "bash build/release.sh"
+  },
+  "keywords": [
+    "uni-app",
+    "router",
+    "vue-router"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/webpack-env": "^1.14.0",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.19.4",
+    "rollup-plugin-buble": "^0.19.8",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-replace": "^2.2.0",
+    "rollup-plugin-terser": "^5.1.1",
+    "rollup-plugin-typescript2": "^0.22.1",
+    "terser": "^4.1.3",
+    "typescript": "^3.1.1"
+  },
+  "dependencies": {
+    "vue": "^2.6.10"
+  }
+}
