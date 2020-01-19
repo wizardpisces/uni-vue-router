@@ -40,12 +40,13 @@ interface Location {
     hash?: string;
 }
 
-type UniNavigate =
-    | 'navigateTo'
-    | 'switchTab'
-    | 'reLaunch'
-    | 'redirectTo'
-    | 'navigateBack';
+type NavigationMethodMapType = {
+    push: 'navigateTo',
+    pushTab: 'switchTab',
+    replace: 'redirectTo',
+    replaceAll: 'reLaunch',
+    back: 'navigateBack',
+}
 
 type VoidFn = () => void;
 
@@ -81,7 +82,7 @@ declare module 'vue/types/options' {
 export {
     PluginFunction,
     UniRouter,
-    UniNavigate,
+    NavigationMethodMapType,
     VoidFn,
     NextFn,
     NavigationGuard,

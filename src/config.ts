@@ -1,6 +1,6 @@
-import { Dictionary, UniNavigate } from './type';
+import { Dictionary, NavigationMethodMapType } from './type';
 
-export const methodMap: Dictionary<UniNavigate> = {
+export const methodMap: NavigationMethodMapType = {
     push: 'navigateTo',
     pushTab: 'switchTab',
     replace: 'redirectTo',
