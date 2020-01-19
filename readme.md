@@ -73,6 +73,29 @@ router.afterEach((to: Route, from: Route) => {
 
 ```
 
+### 解决uniapp的header上点back或者手动滑后退监听不到导致$route.stack错误的方案
+
+```ts
+
+@Component
+export class RouterMixin extends Vue {
+    onUnload() {
+        let navigationMethodName = this.$router.navigationMethodName
+        // @ts-ignore
+        if (this.mpType === 'page' && (!navigationMethodName || navigationMethodName === 'push') && this.$router.stack.length > 1) {
+            this.$router.stack.pop();
+            this.$router.index--;
+            this.$router.current = this.$router.stack[this.$router.index];
+        }
+        // @ts-ignore
+        this.$router.navigationMethodName = '';
+    }
+}
+
+Vue.mixin(RouterMixin)
+
+```
+
 ### API
 
 路由方法映射关系
@@ -136,6 +159,6 @@ transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这�
 
 ### todos
 
-* 完善 模拟的 history stack
+* ~~完善 模拟的 history stack~~
 * add tslint, pretty, test
 * nested(方便路由钩子权限管理) router

@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v1.1.5
+  * uniapp-router v1.2.0
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -411,7 +411,11 @@ function registerHook(list, fn) {
 class UniRouter extends BaseRouter {
     constructor(options) {
         super(options);
-        this.navigationMethodName = 'push'; //mainly used for onUnload mixin pop action
+        /**
+         * 这个字段主要是提供一个 uniapp的back没法被proxy，监听不到的hack方案
+         * 通过这个字段来标记路由跳转是否通过UniRouter，没有的话就执行路由补丁，详细参加readme.md文档
+         **/
+        this.navigationMethodName = '';
     }
     /**
      *  pushTab的stack处理方式目前的跟 push相同，按照文档 https://uniapp.dcloud.io/api/router?id=switchtab，
