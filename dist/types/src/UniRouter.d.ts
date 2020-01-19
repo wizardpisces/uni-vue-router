@@ -1,7 +1,8 @@
-import { RawLocation, VoidFn } from './type/index';
+import { RawLocation, VoidFn, NavigationMethodMapType } from './type/index';
 import BaseRouter from './Base';
 export default class UniRouter extends BaseRouter {
     constructor(options?: any);
+    navigationMethodName: keyof NavigationMethodMapType;
     /**
      *  pushTab的stack处理方式目前的跟 push相同，按照文档 https://uniapp.dcloud.io/api/router?id=switchtab，
      *  需要传递参数进来才能处理掉非tabbar页面

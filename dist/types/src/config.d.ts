@@ -1,3 +1,3 @@
-import { Dictionary, UniNavigate } from './type';
-export declare const methodMap: Dictionary<UniNavigate>;
+import { NavigationMethodMapType } from './type';
+export declare const methodMap: NavigationMethodMapType;
 export declare const NAME_SPLITTER = "-";

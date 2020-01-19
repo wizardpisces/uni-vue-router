@@ -26,7 +26,13 @@ interface Location {
     query?: Dictionary<any>;
     hash?: string;
 }
-declare type UniNavigate = 'navigateTo' | 'switchTab' | 'reLaunch' | 'redirectTo' | 'navigateBack';
+declare type NavigationMethodMapType = {
+    push: 'navigateTo';
+    pushTab: 'switchTab';
+    replace: 'redirectTo';
+    replaceAll: 'reLaunch';
+    back: 'navigateBack';
+};
 declare type VoidFn = () => void;
 declare type NextFn = (to?: RawLocation | false | ((vm: Vue) => any) | void) => void;
 declare type NavigationGuard = (to: Route, from: Route, next: NextFn) => any;
@@ -48,4 +54,4 @@ declare module 'vue/types/options' {
         router?: UniRouter;
     }
 }
-export { PluginFunction, UniRouter, UniNavigate, VoidFn, NextFn, NavigationGuard, AfterEachHook, RawLocation, Route, RouteConfig, RouteConfigExtended, RouterOptions, Location, };
+export { PluginFunction, UniRouter, NavigationMethodMapType, VoidFn, NextFn, NavigationGuard, AfterEachHook, RawLocation, Route, RouteConfig, RouteConfigExtended, RouterOptions, Location, };

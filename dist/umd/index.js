@@ -1,6 +1,6 @@
 /**
-  * uniapp-router v1.0.4
-  * (c) 2019 wizardpisces
+  * uniapp-router v1.1.4
+  * (c) 2020 wizardpisces
   * @license MIT
   */
 (function (global, factory) {
@@ -446,7 +446,9 @@
     var UniRouter = /** @class */ (function (_super) {
         __extends(UniRouter, _super);
         function UniRouter(options) {
-            return _super.call(this, options) || this;
+            var _this = _super.call(this, options) || this;
+            _this.navigationMethodName = 'push'; //mainly used for onUnload mixin pop action
+            return _this;
         }
         /**
          *  pushTab的stack处理方式目前的跟 push相同，按照文档 https://uniapp.dcloud.io/api/router?id=switchtab，
@@ -464,7 +466,10 @@
                 uni[methodMap[methodName]]({
                     url: "" + options.pathname + options.search,
                     success: options.onCompleteProxy(function () {
-                        _this.pushStack(options.route);
+                        // this.pushStack(options.route);
+                        _this.navigationMethodName = methodName;
+                        _this.stack = [options.route];
+                        _this.index = 0;
                         onComplete && onComplete();
                     }),
                     fail: onAbort,
@@ -483,6 +488,7 @@
                 uni[methodMap[methodName]]({
                     url: "" + options.pathname + options.search,
                     success: options.onCompleteProxy(function () {
+                        _this.navigationMethodName = methodName;
                         _this.pushStack(options.route);
                         onComplete && onComplete();
                     }),
@@ -502,6 +508,7 @@
                 uni[methodMap[methodName]]({
                     url: "" + options.pathname + options.search,
                     success: options.onCompleteProxy(function () {
+                        _this.navigationMethodName = methodName;
                         _this.stack = _this.stack
                             .slice(0, _this.index)
                             .concat(options.route);
@@ -523,6 +530,7 @@
                 uni[methodMap[methodName]]({
                     url: "" + options.pathname + options.search,
                     success: options.onCompleteProxy(function () {
+                        _this.navigationMethodName = methodName;
                         _this.stack = [options.route];
                         _this.index = 0;
                         onComplete && onComplete();
@@ -538,6 +546,7 @@
         UniRouter.prototype.go = function (n) {
             var _this = this;
             if (n === void 0) { n = 0; }
+            var methodName = 'back';
             /**
              * 直接调用uni-app的api，防止目前的stack出现问题导致回退失败，之后再移到transitionTo的回掉里面
              * 因为现在可能导致back无法进行问题的原因（onLoanch,switchTab,back等非UniRouter监控的地方）
@@ -552,8 +561,11 @@
             }
             var route = this.stack[targetIndex];
             return this.transitionTo(route, function (options) {
-                _this.index = targetIndex;
-                _this.updateRoute(route);
+                options.onCompleteProxy(function () {
+                    _this.navigationMethodName = methodName;
+                    _this.stack = _this.stack.slice(0, targetIndex + 1);
+                    _this.index = targetIndex;
+                });
                 // uni[methodMap['back']]({
                 //     delta: -n
                 // });
