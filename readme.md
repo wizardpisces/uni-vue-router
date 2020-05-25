@@ -1,5 +1,5 @@
 #  uni-vue-router
-* router for uniapp,based on project file structure ( mainly reference vue-router , nuxt )
+* router for uniapp,based on project file structure ( mainly reference vue-router )
 * support typescript
 * support basic vue-router API
 
@@ -22,7 +22,9 @@ new App({
 }).$mount();
 ```
 ### Basic Usages
-App.vue初始化最初的 $route
+
+App.vue初始化路由
+
 ```ts
 onLaunch(options) {
   //first time init current route
@@ -34,12 +36,16 @@ onLaunch(options) {
  },
 ```
 
+路由跳转
+
 ```ts
 this.$router.push({
     name:'bookings-detail',
     path:'/pages/bookings/detail/index'
 })
 ```
+
+路由变化监听
 
 ```ts 
 @Watch('$route',{
@@ -48,6 +54,8 @@ this.$router.push({
     console.log('$route changed!',newVal,oldVal,this.$route)
 }
 ```
+
+路由钩子
 
 ```ts
 
@@ -70,29 +78,6 @@ router.afterEach((to: Route, from: Route) => {
 router.afterEach((to: Route, from: Route) => {
     console.log('[afterEach]:', to, from);
 });
-
-```
-
-### 解决uniapp的header上点back或者手动滑后退监听不到导致$route.stack错误的方案
-
-```ts
-
-@Component
-export class RouterMixin extends Vue {
-    onUnload() {
-        let navigationMethodName = this.$router.navigationMethodName
-        // @ts-ignore
-        if (this.mpType === 'page' && (!navigationMethodName || navigationMethodName === 'push') && this.$router.stack.length > 1) {
-            this.$router.stack.pop();
-            this.$router.index--;
-            this.$router.current = this.$router.stack[this.$router.index];
-        }
-        // @ts-ignore
-        this.$router.navigationMethodName = '';
-    }
-}
-
-Vue.mixin(RouterMixin)
 
 ```
 
@@ -121,7 +106,7 @@ afterEach(afterHook, onComplete?: VoidFn, onAbort?: VoidFn)
 transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这种非手动调用的地方手动调用更新 $route
 ```
 
-#### Example
+#### 目录结构
 ```
 ├── pages
 │   ├── bookings
@@ -137,11 +122,38 @@ transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这�
  ]
 ```
 
-#### 约定
+#### 目录结构约定以及注意事项
 
 1. 路由目录下必须有一个 index.vue
-2. path => name 例子： 'pages/bookings/detail/index.vue' => bookings-detail
-3. 文件名不能包含中横线，容易导致路径冲突（eg: pages/bookings/detail/index.vue 跟 pages/bookings-detail/index.vue 会转为相同的name）
+2. 基于第一条：path (index.vue文件路径，也是路由path) => name (路由名字) 的映射关系 例子： 'pages/bookings/detail/index.vue' => bookings-detail
+3. 基于第二条：文件名不能包含中横线，容易导致路径冲突（eg: pages/bookings/detail/index.vue 跟 pages/bookings-detail/index.vue 会转为相同的name）
+
+
+### uniapp跳转问题fix方案
+
+解决uniapp的header上点back或者手动滑后退监听不到导致$route.stack错误的方案
+
+```ts
+
+@Component
+export class RouterMixin extends Vue {
+    onUnload() {
+        let navigationMethodName = this.$router.navigationMethodName
+        // @ts-ignore
+        if (this.mpType === 'page' && (!navigationMethodName || navigationMethodName === 'push') && this.$router.stack.length > 1) {
+            this.$router.stack.pop();
+            this.$router.index--;
+            this.$router.current = this.$router.stack[this.$router.index];
+        }
+        // @ts-ignore
+        this.$router.navigationMethodName = '';
+    }
+}
+
+Vue.mixin(RouterMixin)
+
+```
+## 其它
 
 ### uni自带跳转问题
 
