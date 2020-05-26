@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v1.2.0
+  * uniapp-router v1.2.1
   * (c) 2020 wizardpisces
   * @license MIT
   */
