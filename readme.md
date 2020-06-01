@@ -1,5 +1,7 @@
 #  uni-vue-router
-* router for uniapp,based on project file structure ( mainly reference vue-router )
+router for uniapp ( mainly reference vue-router )
+
+* Auto generate router table based on project file structure
 * support typescript
 * support basic vue-router API
 
@@ -122,7 +124,7 @@ transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这�
  ]
 ```
 
-#### 目录结构约定以及注意事项
+#### 约定结构
 
 1. 路由目录下必须有一个 index.vue
 2. 基于第一条：path (index.vue文件路径，也是路由path) => name (路由名字) 的映射关系 例子： 'pages/bookings/detail/index.vue' => bookings-detail
