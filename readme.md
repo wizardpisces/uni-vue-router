@@ -16,7 +16,11 @@ import Router, { Route, NextFn } from 'uni-vue-router';
 
 Vue.use(Router);
 
-const router = new Router();
+// 通过 pages.json 转换路由信息 (mode = 'pagesJSON')
+const router = new Router({
+    mode:'pagesJSON',// default
+    pagesJSON:require('./pages.json)
+});
 
 new App({
     router,
@@ -108,6 +112,10 @@ afterEach(afterHook, onComplete?: VoidFn, onAbort?: VoidFn)
 transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这种非手动调用的地方手动调用更新 $route
 ```
 
+
+
+### 通过目录结构自动生成路由 (mode = pageStructure) 
+[后面会废弃掉，此方案会随着工程体积会随着page增多而膨胀](https://stackoverflow.com/questions/54059179/what-is-require-context#:~:text=The%20intention%20is%20to%20tell,short%2C%20you%20would%20use%20require.)
 #### 目录结构
 ```
 ├── pages
@@ -133,7 +141,7 @@ transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这�
 
 ### uniapp跳转问题fix方案
 
-解决uniapp的header上点back或者手动滑后退监听不到导致$route.stack错误的方案
+解决uniapp的header上点back或者手动滑后退监听不到导致$route.stack错误的方案，主要是解决埋点之类的需求
 
 ```ts
 
@@ -170,9 +178,3 @@ Vue.mixin(RouterMixin)
 
 * router-view （uni-app 访问不到root.$parent）
 * router-link （uni-app 不支持在Vue.install里面挂载组件，所以现在的router-link是无效的）
-
-### todos
-
-* ~~完善 模拟的 history stack~~
-* add tslint, pretty, test
-* nested(方便路由钩子权限管理) router

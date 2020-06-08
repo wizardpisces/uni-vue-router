@@ -10,6 +10,7 @@ interface Route {
 }
 
 interface RouteConfig {
+    [key:string]:any;
     path: string;
     name?: string;
     children?: RouteConfig[];
@@ -29,8 +30,24 @@ interface RouteConfigExtended extends RouteConfig {
     children: RouteConfig[];
 }
 
+export namespace Uni {
+    export type subPackage = {
+        [key:string]:any;
+        root:string;
+        pages:RouteConfig[]
+    }
+    export type PagesJSON = {
+        [key:string]:any;
+        pages: RouteConfig[],
+        subPackages?: subPackage[]
+    }
+}
+
+
 interface RouterOptions {
-    routes?: RouteConfig[];
+    // routes?: RouteConfig[];
+    mode?: 'pagesJSON' | 'pageStructure',// default pagesJSON
+    pagesJSON?: Uni.PagesJSON // when mode is 'pagesJSON' , routerMap must be provided
 }
 
 interface Location {

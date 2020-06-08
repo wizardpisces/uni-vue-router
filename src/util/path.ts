@@ -1,8 +1,3 @@
-import { RouteConfig } from '../type';
-import { getNotNestedRoutes } from './route';
-
-const prefixSlashRE = /^\/?/;
-
 export function parsePath(
     path: string = '',
 ): {
@@ -30,29 +25,4 @@ export function parsePath(
         query,
         hash,
     };
-}
-
-export function resolvePathByName(routeName: string): string | undefined {
-    let routes = getNotNestedRoutes();
-    let matchedName = routes.filter((route: RouteConfig) => {
-        return routeName === route.name;
-    });
-
-    return matchedName && matchedName[0].path;
-}
-
-export function resolveNameByPath(routePath: string): string | undefined {
-    let routes = getNotNestedRoutes();
-
-    function isSamePath(path1: string, path2: string) {
-        return (
-            path1.replace(prefixSlashRE, '') ===
-            path2.replace(prefixSlashRE, '')
-        );
-    }
-    let matchedName = routes.filter((route: RouteConfig) => {
-        return isSamePath(routePath, route.path);
-    });
-
-    return matchedName && matchedName[0].name;
 }

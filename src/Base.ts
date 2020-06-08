@@ -8,12 +8,12 @@ import {
     Route,
     AfterEachHook,
 } from './type/index';
-
+import RouteMap from './RouteMap'
 import { warn } from './util/warn';
 
 import { runQueue } from './util/async';
 import install from './install';
-import { parsePath, resolvePathByName, resolveNameByPath } from './util/path';
+import { parsePath } from './util/path';
 import { stringifyQuery, resolveQuery } from './util/query';
 import { START, createRoute } from './util/route';
 
@@ -36,6 +36,7 @@ export default class BaseRouter {
     beforeHooks: NavigationGuard[];
     afterHooks: AfterEachHook[];
     current: Route;
+    routeMap: RouteMap;
 
     /**
      *  记录history队列
@@ -50,7 +51,7 @@ export default class BaseRouter {
     push(location: RawLocation, onComplete?: VoidFn, onAbort?: VoidFn) {}
     replace(location: RawLocation, onComplete?: VoidFn, onAbort?: VoidFn) {}
 
-    constructor(options?: any) {
+    constructor(options: RouterOptions) {
         this.options = options;
         this.stack = [];
         this.index = -1;
@@ -58,6 +59,7 @@ export default class BaseRouter {
         this.afterHooks = [];
         // start with a route object that stands for "nowhere"
         this.current = START;
+        this.routeMap =  new RouteMap(options)
     }
 
     resolveBeforeHooks(iterator: Function, callback: VoidFn) {
@@ -72,9 +74,9 @@ export default class BaseRouter {
                 path: location,
             };
         } else if (!location.path && location.name) {
-            location.path = resolvePathByName(location.name);
+            location.path = this.routeMap.resolvePathByName(location.name);
         } else if (location.path && !location.name) {
-            location.name = resolveNameByPath(location.path);
+            location.name = this.routeMap.resolveNameByPath(location.path);
         }
         if (!location.path && !location.name) {
             warn(false, 'Must provide location path or name!');
