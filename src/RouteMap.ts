@@ -50,10 +50,10 @@ export default class RouteMap {
 }
 
 function generateRouterConfig(options: RouterOptions): RouteConfigExtended[] {
-    if (options.mode === 'pageStructure') {
-        return generateRouterConfigByPageStructure()
-    } else (options.mode === 'pagesJSON') {
+    if (options.mode === 'pagesJSON') {
         return generateRouterConfigByPagesJson(options.pagesJSON as Uni.PagesJSON)
+    } else {
+        return generateRouterConfigByPageStructure();
     }
 }
 

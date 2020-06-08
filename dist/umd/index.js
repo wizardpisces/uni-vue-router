@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v1.2.2
+  * uniapp-router v2.0.0
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -54,6 +54,128 @@
             console.error("[klk-uni-router] " + message);
     }
 
+    var prefixSlashRE = /^\/?/;
+    // todos add nested route
+    var RouteMap = /** @class */ (function () {
+        function RouteMap(options) {
+            if (options === void 0) { options = {
+                mode: 'pagesJSON'
+            }; }
+            this.routeMap = [];
+            warn(options.mode === 'pageStructure', 'pageStructure mode will be deprecated');
+            if (options.mode === 'pagesJSON') {
+                if (!options.pagesJSON) {
+                    warn(true, 'Please Provide pages.json in pagesJSON mode!');
+                    return;
+                }
+            }
+            this.routeMap = generateRouterConfig(options);
+        }
+        RouteMap.prototype.resolvePathByName = function (routeName) {
+            var routes = this.routeMap;
+            var matchedName = routes.filter(function (route) {
+                return routeName === route.name;
+            });
+            return matchedName && matchedName[0].path;
+        };
+        RouteMap.prototype.resolveNameByPath = function (routePath) {
+            var routes = this.routeMap;
+            function isSamePath(path1, path2) {
+                return (path1.replace(prefixSlashRE, '') ===
+                    path2.replace(prefixSlashRE, ''));
+            }
+            var matchedName = routes.filter(function (route) {
+                return isSamePath(routePath, route.path);
+            });
+            return matchedName && matchedName[0].name;
+        };
+        return RouteMap;
+    }());
+    function generateRouterConfig(options) {
+        if (options.mode === 'pagesJSON') {
+            return generateRouterConfigByPagesJson(options.pagesJSON);
+        }
+        else {
+            return generateRouterConfigByPageStructure();
+        }
+    }
+    /**
+     * 通过pages.json生成 router table
+     */
+    function generateRouterConfigByPagesJson(pagesJSON) {
+        function transformPathToName(path) {
+            if (path[path.length - 1] === '/') { //remove trailing slash
+                path = path.slice(0, -1);
+            }
+            return path.split('/').join(NAME_SPLITTER);
+        }
+        function generateRouteConfig(pages, root) {
+            if (root === void 0) { root = ''; }
+            return pages.reduce(function (config, cur) {
+                if (root) {
+                    cur.path = root + '/' + cur.path;
+                }
+                if (!cur.name) {
+                    cur.name = transformPathToName(cur.path);
+                }
+                config.push(cur);
+                return config;
+            }, []);
+        }
+        var routerConfig = generateRouteConfig(pagesJSON.pages);
+        if (pagesJSON.subPackages) {
+            routerConfig.concat(pagesJSON.subPackages.reduce(function (config, cur) {
+                return config.concat(generateRouteConfig(cur.pages, cur.root));
+            }, []));
+        }
+        console.log('[router config generated from pages.json : not nested PageStructure]', routerConfig);
+        return routerConfig;
+    }
+    /**
+     * 通过约定的文件结构生成 router table
+     */
+    function generateRouterConfigByPageStructure() {
+        // eg '/pages/bookings/detail/index.vue' => "/pages/bookings/detail/index" to match uni-app pages.json rules
+        function transformPath(filePath) {
+            var matched = filePath.match(/(.+).vue/i);
+            var path = '';
+            if (matched) {
+                path = matched[1];
+            }
+            else {
+                warn(false, "transformPath failed, wrong filePath: " + filePath);
+            }
+            return path;
+        }
+        // eg  '/pages/bookings/detail/index.vue' => bookings-detail
+        function transformFilePathToName(routePath) {
+            var matched = routePath.match(/\/?pages\/(.+)\/index.vue/i);
+            var name = '';
+            if (matched) {
+                name = matched[1].split('/').join(NAME_SPLITTER);
+            }
+            else {
+                warn(false, "transformFilePathToName failed, wrong path: " + routePath);
+            }
+            return name;
+        }
+        var routerConfig = [], files = require.context('pages/', true, /\/index.vue$/i);
+        // eg "./bookings/detail" => "/pages/bookings/detail"
+        var filePathArray = files
+            .keys()
+            .map(function (filePath) { return "/pages/" + filePath.slice(2); })
+            .sort();
+        routerConfig = filePathArray.map(function (filePath) {
+            return {
+                path: transformPath(filePath),
+                name: transformFilePathToName(filePath),
+                children: [],
+            };
+        });
+        console.log('[router config generated from file structure : not nested PageStructure]', routerConfig);
+        return routerConfig;
+    }
+
     function runQueue(queue, fn, cb) {
         var step = function (index) {
             if (index >= queue.length) {
@@ -106,68 +228,6 @@
         // Vue.component('router-link', RouterLink);
     }
 
-    // eg '/pages/bookings/detail/index.vue' => "/pages/bookings/detail/index" to match uni-app pages.json rules
-    function transformPath(filePath) {
-        var matched = filePath.match(/(.+).vue/i);
-        var path = '';
-        if (matched) {
-            path = matched[1];
-        }
-        else {
-            warn(false, "transformPath failed, wrong filePath: " + filePath);
-        }
-        return path;
-    }
-    // eg  '/pages/bookings/detail/index.vue' => bookings-detail
-    function transformFilePathToName(routePath) {
-        var matched = routePath.match(/\/?pages\/(.+)\/index.vue/i);
-        var name = '';
-        if (matched) {
-            name = matched[1].split('/').join(NAME_SPLITTER);
-        }
-        else {
-            warn(false, "transformFilePathToName failed, wrong path: " + routePath);
-        }
-        return name;
-    }
-    function generateRouterConfig(requireContext) {
-        var routerConfig = [], files = requireContext
-            ? requireContext('pages/', true, /\/index.vue$/i)
-            : require.context('pages/', true, /\/index.vue$/i);
-        // eg "./bookings/detail" => "/pages/bookings/detail"
-        var filePathArray = files
-            .keys()
-            .map(function (filePath) { return "/pages/" + filePath.slice(2); })
-            .sort();
-        routerConfig = filePathArray.map(function (filePath) {
-            return {
-                path: transformPath(filePath),
-                name: transformFilePathToName(filePath),
-                children: [],
-            };
-        });
-        return routerConfig;
-    }
-    var routeNotNested = generateRouterConfig();
-    // const routerConfig: RouteConfigExtended[] = createNestedRoutes(routeNotNested);
-    console.log('[router config]', '\n[not nested]', routeNotNested); // file full path
-
-    function createRoute(location) {
-        var route = {
-            name: location.name,
-            path: location.path || '/',
-            query: location.query || {},
-        };
-        return Object.freeze(route);
-    }
-    var START = createRoute({
-        path: '/',
-    });
-    function getNotNestedRoutes() {
-        return routeNotNested;
-    }
-
-    var prefixSlashRE = /^\/?/;
     function parsePath(path) {
         if (path === void 0) { path = ''; }
         var hash = '';
@@ -187,24 +247,6 @@
             query: query,
             hash: hash,
         };
-    }
-    function resolvePathByName(routeName) {
-        var routes = getNotNestedRoutes();
-        var matchedName = routes.filter(function (route) {
-            return routeName === route.name;
-        });
-        return matchedName && matchedName[0].path;
-    }
-    function resolveNameByPath(routePath) {
-        var routes = getNotNestedRoutes();
-        function isSamePath(path1, path2) {
-            return (path1.replace(prefixSlashRE, '') ===
-                path2.replace(prefixSlashRE, ''));
-        }
-        var matchedName = routes.filter(function (route) {
-            return isSamePath(routePath, route.path);
-        });
-        return matchedName && matchedName[0].name;
     }
 
     //copied from https://github.com/vuejs/vue-router/blob/dev/src/util/query.js
@@ -293,6 +335,18 @@
         return res ? "?" + res : '';
     }
 
+    function createRoute(location) {
+        var route = {
+            name: location.name,
+            path: location.path || '/',
+            query: location.query || {},
+        };
+        return Object.freeze(route);
+    }
+    var START = createRoute({
+        path: '/',
+    });
+
     function isError(err) {
         return Object.prototype.toString.call(err).indexOf('Error') > -1;
     }
@@ -313,6 +367,7 @@
             this.afterHooks = [];
             // start with a route object that stands for "nowhere"
             this.current = START;
+            this.routeMap = new RouteMap(options);
         }
         BaseRouter.prototype.go = function (n) { };
         BaseRouter.prototype.push = function (location, onComplete, onAbort) { };
@@ -329,10 +384,10 @@
                 };
             }
             else if (!location.path && location.name) {
-                location.path = resolvePathByName(location.name);
+                location.path = this.routeMap.resolvePathByName(location.name);
             }
             else if (location.path && !location.name) {
-                location.name = resolveNameByPath(location.path);
+                location.name = this.routeMap.resolveNameByPath(location.path);
             }
             if (!location.path && !location.name) {
                 warn(false, 'Must provide location path or name!');

@@ -1,4 +1,5 @@
 import { RouterOptions, PluginFunction, RawLocation, NavigationGuard, VoidFn, Route, AfterEachHook } from './type/index';
+import RouteMap from './RouteMap';
 declare type Cb = (r: Route) => void;
 export default class BaseRouter {
     static install: PluginFunction<never>;
@@ -6,6 +7,7 @@ export default class BaseRouter {
     beforeHooks: NavigationGuard[];
     afterHooks: AfterEachHook[];
     current: Route;
+    routeMap: RouteMap;
     /**
      *  记录history队列
      **/
@@ -16,7 +18,7 @@ export default class BaseRouter {
     go(n: number): void;
     push(location: RawLocation, onComplete?: VoidFn, onAbort?: VoidFn): void;
     replace(location: RawLocation, onComplete?: VoidFn, onAbort?: VoidFn): void;
-    constructor(options?: any);
+    constructor(options: RouterOptions);
     resolveBeforeHooks(iterator: Function, callback: VoidFn): void;
     resolve(location: RawLocation): {
         name: string | undefined;

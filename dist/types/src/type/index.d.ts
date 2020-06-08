@@ -9,6 +9,7 @@ interface Route {
     query: Dictionary<string>;
 }
 interface RouteConfig {
+    [key: string]: any;
     path: string;
     name?: string;
     children?: RouteConfig[];
@@ -17,8 +18,21 @@ interface RouteConfigExtended extends RouteConfig {
     name: string;
     children: RouteConfig[];
 }
+export declare namespace Uni {
+    type subPackage = {
+        [key: string]: any;
+        root: string;
+        pages: RouteConfig[];
+    };
+    type PagesJSON = {
+        [key: string]: any;
+        pages: RouteConfig[];
+        subPackages?: subPackage[];
+    };
+}
 interface RouterOptions {
-    routes?: RouteConfig[];
+    mode?: 'pagesJSON' | 'pageStructure';
+    pagesJSON?: Uni.PagesJSON;
 }
 interface Location {
     name?: string;
