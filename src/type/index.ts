@@ -10,7 +10,7 @@ interface Route {
 }
 
 interface RouteConfig {
-    [key:string]:any;
+    [key: string]: any;
     path: string;
     name?: string;
     children?: RouteConfig[];
@@ -32,12 +32,12 @@ interface RouteConfigExtended extends RouteConfig {
 
 export namespace Uni {
     export type subPackage = {
-        [key:string]:any;
-        root:string;
-        pages:RouteConfig[]
+        [key: string]: any;
+        root: string;
+        pages: RouteConfig[]
     }
     export type PagesJSON = {
-        [key:string]:any;
+        [key: string]: any;
         pages: RouteConfig[],
         subPackages?: subPackage[]
     }
@@ -46,8 +46,7 @@ export namespace Uni {
 
 interface RouterOptions {
     // routes?: RouteConfig[];
-    mode?: 'pagesJSON' | 'pageStructure',// default pagesJSON
-    pagesJSON?: Uni.PagesJSON // when mode is 'pagesJSON' , routerMap must be provided
+    pagesJSON: Uni.PagesJSON // must provide
 }
 
 interface Location {
@@ -75,16 +74,15 @@ type AfterEachHook = (to: Route, from: Route) => any;
 
 type RawLocation = Location | string;
 
-declare module 'vue/types/vue' {
-    interface Vue {
-        $router: UniRouter;
-        $route: Route;
-    }
-}
+
 
 declare module 'vue/types/vue' {
     // Global properties can be declared
     // on the `VueConstructor` interface
+    interface Vue {
+        $router: UniRouter;
+        $route: Route;
+    }
     interface VueConstructor {
         util: any;
     }
@@ -98,7 +96,6 @@ declare module 'vue/types/options' {
 
 export {
     PluginFunction,
-    UniRouter,
     NavigationMethodMapType,
     VoidFn,
     NextFn,

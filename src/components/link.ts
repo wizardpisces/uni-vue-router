@@ -1,6 +1,6 @@
 import { Prop } from 'vue-property-decorator';
 import Vue, { CreateElement } from 'vue';
-import { Route } from '../type';
+import { Route } from '../type/router';
 
 export default class RouterLink extends Vue {
     name = 'router-link';

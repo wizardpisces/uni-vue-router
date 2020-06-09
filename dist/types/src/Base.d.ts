@@ -1,4 +1,4 @@
-import { RouterOptions, PluginFunction, RawLocation, NavigationGuard, VoidFn, Route, AfterEachHook } from './type/index';
+import { RouterOptions, PluginFunction, RawLocation, NavigationGuard, VoidFn, Route, AfterEachHook } from './type';
 import RouteMap from './RouteMap';
 declare type Cb = (r: Route) => void;
 export default class BaseRouter {

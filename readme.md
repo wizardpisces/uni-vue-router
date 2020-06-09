@@ -10,17 +10,44 @@ router for uniapp ( mainly reference vue-router )
 ```js
 npm install --save uni-vue-router
 ```
+```js
+//配置 vue.config.js
+//为了读取 pages.json，uni-app框架是阻断了通过 webpack 方式读取 pages.json
+
+const webpack = require('webpack')
+
+function readPagesJSON() {
+    const path = require('path');
+    const fs = require('fs');
+    const jsonFilePath = path.join(__dirname, './src/pages.json')
+    if (!fs.existsSync(jsonFilePath)) {
+        throw new Error(jsonFilePath + ' 不存在')
+    }
+
+    return fs.readFileSync(jsonFilePath, 'utf8')
+}
+
+module.exports = {
+    configureWebpack: {
+        plugins: [
+            // new BundleAnalyzerPlugin(),
+            new webpack.DefinePlugin({
+                PAGES_JSON: JSON.stringify(readPagesJSON())
+            })
+        ]
+    }
+}
+```
 
 ```ts
 import Router, { Route, NextFn } from 'uni-vue-router';
 
 Vue.use(Router);
 
-// 通过 pages.json 转换路由信息 (mode = 'pagesJSON')
+// 通过 pages.json 转换路由信息
 const router = new Router({
-    mode:'pagesJSON',// default
-    pagesJSON:require('./pages.json)
-});
+    pagesJSON: PAGES_JSON // PAGES_JSON 在 build的时候会被 webpack 替换
+);
 
 new App({
     router,
@@ -44,9 +71,11 @@ onLaunch(options) {
 
 路由跳转
 
+*注意: 传入的pages.json中如果缺少name，框架会自动通过path生成一个横线分割的 name*
+
 ```ts
 this.$router.push({
-    name:'bookings-detail',
+    name:'pages-bookings-detail-index',
     path:'/pages/bookings/detail/index'
 })
 ```
@@ -112,10 +141,8 @@ afterEach(afterHook, onComplete?: VoidFn, onAbort?: VoidFn)
 transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这种非手动调用的地方手动调用更新 $route
 ```
 
-
-
-### 通过目录结构自动生成路由 (mode = pageStructure) 
-[后面会废弃掉，此方案会随着工程体积会随着page增多而膨胀](https://stackoverflow.com/questions/54059179/what-is-require-context#:~:text=The%20intention%20is%20to%20tell,short%2C%20you%20would%20use%20require.)
+### 通过目录结构自动生成路由， has been deprecated in version >= 2.0.0
+[由于使用 require.context 机制，此方案的工程体积会随着page增多而加速膨胀](https://stackoverflow.com/questions/54059179/what-is-require-context#:~:text=The%20intention%20is%20to%20tell,short%2C%20you%20would%20use%20require.)
 #### 目录结构
 ```
 ├── pages

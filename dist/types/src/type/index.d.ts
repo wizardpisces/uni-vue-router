@@ -31,8 +31,7 @@ export declare namespace Uni {
     };
 }
 interface RouterOptions {
-    mode?: 'pagesJSON' | 'pageStructure';
-    pagesJSON?: Uni.PagesJSON;
+    pagesJSON: Uni.PagesJSON;
 }
 interface Location {
     name?: string;
@@ -57,8 +56,6 @@ declare module 'vue/types/vue' {
         $router: UniRouter;
         $route: Route;
     }
-}
-declare module 'vue/types/vue' {
     interface VueConstructor {
         util: any;
     }
@@ -68,4 +65,4 @@ declare module 'vue/types/options' {
         router?: UniRouter;
     }
 }
-export { PluginFunction, UniRouter, NavigationMethodMapType, VoidFn, NextFn, NavigationGuard, AfterEachHook, RawLocation, Route, RouteConfig, RouteConfigExtended, RouterOptions, Location, };
+export { PluginFunction, NavigationMethodMapType, VoidFn, NextFn, NavigationGuard, AfterEachHook, RawLocation, Route, RouteConfig, RouteConfigExtended, RouterOptions, Location, };

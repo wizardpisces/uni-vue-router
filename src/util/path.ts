@@ -26,3 +26,7 @@ export function parsePath(
         hash,
     };
 }
+
+export function addPrefixSlash(path: string): string {
+    return path[0] !== '/' ? '/' + path : path;
+}

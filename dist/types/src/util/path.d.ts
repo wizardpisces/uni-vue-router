@@ -3,3 +3,4 @@ export declare function parsePath(path?: string): {
     query: string;
     hash: string;
 };
+export declare function addPrefixSlash(path: string): string;

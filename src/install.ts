@@ -1,6 +1,8 @@
 import _Vue from 'vue';
 // import RouterLink from './components/link';
-import { UniRouter, Route } from './type/index';
+import { Route } from './type';
+
+import UniRouter from './UniRouter'
 
 let installed = false;
 const isDef = (v: any) => v !== undefined;

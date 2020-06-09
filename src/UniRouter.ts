@@ -1,11 +1,12 @@
-import { RawLocation, VoidFn, NavigationMethodMapType, Route } from './type/index';
+import { Route, RawLocation, VoidFn, NavigationMethodMapType, RouterOptions } from './type';
 import { methodMap } from './config';
 import BaseRouter from './Base';
 import { warn } from './util/warn';
 
 declare var uni: any;
+
 export default class UniRouter extends BaseRouter {
-    constructor(options?: any) {
+    constructor(options: RouterOptions) {
         super(options);
     }
 
@@ -13,7 +14,7 @@ export default class UniRouter extends BaseRouter {
      * 这个字段主要是提供一个 uniapp的back没法被proxy，监听不到的hack方案
      * 通过这个字段来标记路由跳转是否通过UniRouter，没有的话就执行路由补丁，详细参加readme.md文档
      **/
-    
+
     navigationMethodName: keyof NavigationMethodMapType | '' = '';
 
     /**

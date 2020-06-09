@@ -7,7 +7,7 @@ import {
     NextFn,
     Route,
     AfterEachHook,
-} from './type/index';
+} from './type';
 import RouteMap from './RouteMap'
 import { warn } from './util/warn';
 

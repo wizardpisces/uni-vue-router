@@ -1,5 +1,5 @@
 import Vue, { CreateElement } from 'vue';
-import { Route } from '../type';
+import { Route } from '../type/router';
 export default class RouterLink extends Vue {
     name: string;
     to: Route;
