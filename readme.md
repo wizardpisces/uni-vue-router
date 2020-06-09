@@ -1,17 +1,23 @@
 #  uni-vue-router
-router for uniapp ( mainly reference vue-router )
 
-* Auto generate router table based on project file structure
-* support typescript
-* support basic vue-router API
+根据uniapp的路由方法封装的框架;
+主要参考：[vue-router](https://router.vuejs.org/)
 
-### Development setup
+### 功能
+
+* 根据pages.json自动生成路由表
+* 支持typescript
+* 支持最基本的vue-router的API用法
+
+### 开发设置
 
 ```js
 npm install --save uni-vue-router
 ```
+
+配置 ./vue.config.js
+
 ```js
-//配置 vue.config.js
 //为了读取 pages.json，uni-app框架是阻断了通过 webpack 方式读取 pages.json
 
 const webpack = require('webpack')
@@ -39,7 +45,9 @@ module.exports = {
 }
 ```
 
-```ts
+增加 src/router.js
+
+```js
 import Router, { Route, NextFn } from 'uni-vue-router';
 
 Vue.use(Router);
@@ -54,11 +62,10 @@ new App({
     render: h => h(App),
 }).$mount();
 ```
-### Basic Usages
 
-App.vue初始化路由
+修改 src/App.vue  初始化路由
 
-```ts
+```js
 onLaunch(options) {
   //first time init current route
      this.$router.transitionTo({
@@ -68,6 +75,7 @@ onLaunch(options) {
      console.log('App Launch');
  },
 ```
+### 基本用法
 
 路由跳转
 
@@ -120,7 +128,7 @@ router.afterEach((to: Route, from: Route) => {
 
 路由方法映射关系
 
-```ts
+```js
 {
     push: 'navigateTo',
     pushTab: 'switchTab',
@@ -141,32 +149,8 @@ afterEach(afterHook, onComplete?: VoidFn, onAbort?: VoidFn)
 transitionTo(location: RawLocation) //在 onTabItemTap以及onLaunch里面  这种非手动调用的地方手动调用更新 $route
 ```
 
-### 通过目录结构自动生成路由， has been deprecated in version >= 2.0.0
-[由于使用 require.context 机制，此方案的工程体积会随着page增多而加速膨胀](https://stackoverflow.com/questions/54059179/what-is-require-context#:~:text=The%20intention%20is%20to%20tell,short%2C%20you%20would%20use%20require.)
-#### 目录结构
-```
-├── pages
-│   ├── bookings
-│   │   ├── detail
-│   │   │   └── index.vue
-│   │   ├── index.vue
-```
 
-```js
-[
-    {path: "/pages/bookings/detail/index",name:"bookings-detail"},
-    {path: "/pages/bookings/index", name: "bookings"}
- ]
-```
-
-#### 约定结构
-
-1. 路由目录下必须有一个 index.vue
-2. 基于第一条：path (index.vue文件路径，也是路由path) => name (路由名字) 的映射关系 例子： 'pages/bookings/detail/index.vue' => bookings-detail
-3. 基于第二条：文件名不能包含中横线，容易导致路径冲突（eg: pages/bookings/detail/index.vue 跟 pages/bookings-detail/index.vue 会转为相同的name）
-
-
-### uniapp跳转问题fix方案
+### uniapp手势回退监听的fix方案
 
 解决uniapp的header上点back或者手动滑后退监听不到导致$route.stack错误的方案，主要是解决埋点之类的需求
 
@@ -190,6 +174,35 @@ export class RouterMixin extends Vue {
 Vue.mixin(RouterMixin)
 
 ```
+
+### 通过目录结构自动生成路由
+
+*此方案在版本2.0.0 后废弃*
+*由于使用 require.context 机制，此方案的工程体积会随着page增多而加速膨胀*
+[原因](https://stackoverflow.com/questions/54059179/what-is-require-context#:~:text=The%20intention%20is%20to%20tell,short%2C%20you%20would%20use%20require.)
+
+#### 目录结构
+```
+├── pages
+│   ├── bookings
+│   │   ├── detail
+│   │   │   └── index.vue
+│   │   ├── index.vue
+```
+
+```js
+[
+    {path: "/pages/bookings/detail/index",name:"bookings-detail"},
+    {path: "/pages/bookings/index", name: "bookings"}
+ ]
+```
+
+#### 约定结构
+
+1. 路由目录下必须有一个 index.vue
+2. 基于第一条：path (index.vue文件路径，也是路由path) => name (路由名字) 的映射关系 例子： 'pages/bookings/detail/index.vue' => bookings-detail
+3. 基于第二条：文件名不能包含中横线，容易导致路径冲突（eg: pages/bookings/detail/index.vue 跟 pages/bookings-detail/index.vue 会转为相同的name）
+
 ## 其它
 
 ### uni自带跳转问题
