@@ -27,6 +27,10 @@ export function parsePath(
     };
 }
 
-export function addPrefixSlash(path: string): string {
-    return path[0] !== '/' ? '/' + path : path;
+export function addPrefixSlash(str: string): string {
+    return str[0] !== '/' ? '/' + str : str;
+}
+
+export function removeFirstAndLastSlash(str: string) {
+    return str.replace(/^\/|\/$/g, '');
 }

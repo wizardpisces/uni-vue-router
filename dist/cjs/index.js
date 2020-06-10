@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v2.0.0-beta.2
+  * uniapp-router v2.0.0
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -46,8 +46,11 @@ function parsePath(path = '') {
         hash,
     };
 }
-function addPrefixSlash(path) {
-    return path[0] !== '/' ? '/' + path : path;
+function addPrefixSlash(str) {
+    return str[0] !== '/' ? '/' + str : str;
+}
+function removeFirstAndLastSlash(str) {
+    return str.replace(/^\/|\/$/g, '');
 }
 
 const prefixSlashRE = /^\/?/;
@@ -62,7 +65,7 @@ class RouteMap {
     constructor(options) {
         this.routeTable = [];
         if (!options.pagesJSON) {
-            warn(true, 'Please Provide pagesJSON!');
+            warn(false, 'Please Provide pagesJSON!');
             return;
         }
         options.pagesJSON = deepClone(options.pagesJSON);
@@ -87,28 +90,19 @@ class RouteMap {
         return matchedRoute && matchedRoute[0].name;
     }
 }
-// function generateRouterConfig(options: RouterOptions): RouteConfigExtended[] {
-//     if (options.mode === 'pagesJSON') {
-//         return generateRouterConfigByPagesJson(options.pagesJSON as Uni.PagesJSON)
-//     } else {
-//         return generateRouterConfigByPageStructure();
-//     }
-// }
 /**
  * 通过pages.json生成 router table
  */
 function generateRouterConfigByPagesJson(pagesJSON) {
     function transformPathToName(path) {
-        if (path[path.length - 1] === '/') { //remove trailing slash
-            path = path.slice(0, -1);
-        }
-        return path.split('/').join(NAME_SPLITTER);
+        return removeFirstAndLastSlash(path).split('/').join(NAME_SPLITTER);
     }
     function generateRouteConfig(pages, root = '') {
         return pages.reduce((config, cur) => {
             if (root) {
                 cur.path = root + '/' + cur.path;
             }
+            // /pages/bookings/detail/index => pages-bookings-detail-index
             if (!cur.name) {
                 cur.name = transformPathToName(cur.path);
             }
@@ -126,103 +120,6 @@ function generateRouterConfigByPagesJson(pagesJSON) {
     console.log('[router config generated from pages.json]:', routerConfig);
     return routerConfig;
 }
-/**
- * 通过约定的文件结构生成 router table  (deprecated)
- */
-// function generateRouterConfigByPageStructure(): RouteConfigExtended[] {
-//     // eg '/pages/bookings/detail/index.vue' => "/pages/bookings/detail/index" to match uni-app pages.json rules
-//     function transformPath(filePath: string) {
-//         let matched = filePath.match(/(.+).vue/i);
-//         let path = '';
-//         if (matched) {
-//             path = matched[1];
-//         } else {
-//             warn(false, `transformPath failed, wrong filePath: ${filePath}`);
-//         }
-//         return path;
-//     }
-//     // eg  '/pages/bookings/detail/index.vue' => bookings-detail
-//     function transformFilePathToName(routePath: string) {
-//         let matched = routePath.match(/\/?pages\/(.+)\/index.vue/i);
-//         let name = '';
-//         if (matched) {
-//             name = matched[1].split('/').join(NAME_SPLITTER);
-//         } else {
-//             warn(false, `transformFilePathToName failed, wrong path: ${routePath}`);
-//         }
-//         return name;
-//     }
-//     let routerConfig: RouteConfigExtended[] = [],
-//         files = require.context('pages/', true, /\/index.vue$/i);
-//     // eg "./bookings/detail" => "/pages/bookings/detail"
-//     let filePathArray = files
-//         .keys()
-//         .map((filePath: string) => `/pages/${filePath.slice(2)}`)
-//         .sort();
-//     routerConfig = filePathArray.map((filePath: string) => {
-//         return {
-//             path: transformPath(filePath),
-//             name: transformFilePathToName(filePath),
-//             children: [],
-//         };
-//     });
-//     console.log(
-//         '[router config generated from file structure : not nested PageStructure]',
-//         routerConfig
-//     );
-//     return routerConfig;
-// }
-/**
- *
-let a = [{ path: "/pages/order/detail/index", name: "order-detail" },{ path: "/pages/order/index", name: "order" }]
-let b = createNestedRoutes(a)
-console.log(b);
-[{
-    name: "order",
-    path: "/pages/order/index",
-    children:[{
-        name: "order-detail",
-        path: "/pages/order/detail/index",
-    }]
-}]
-*/
-// type MapValue = { route: RouteConfigExtended; visited: Boolean };
-// function createNestedRoutes(
-//     routes: Array<RouteConfigExtended>,
-// ): RouteConfigExtended[] {
-//     if (!routes.length) return [];
-//     let nestedRoutes: RouteConfigExtended[] = [];
-//     let nameRouteMap: Dictionary<MapValue> = {};
-//     //生成name route索引
-//     routes.forEach(route => {
-//         nameRouteMap[route.name] = {
-//             route: route,
-//             visited: false,
-//         };
-//     });
-//     //拆分每个route的name，分层遍历结构填充children，保存第一级 route
-//     routes.forEach((route: RouteConfigExtended) => {
-//         let nameArray = route.name.split(NAME_SPLITTER),
-//             parentRoute: RouteConfigExtended,
-//             childRouteName = '';
-//         //填充nestedRoutes
-//         childRouteName = childRouteName + nameArray.shift();
-//         if (!nameRouteMap[childRouteName].visited) {
-//             nameRouteMap[childRouteName].visited = true;
-//             nestedRoutes.push(nameRouteMap[childRouteName].route);
-//         }
-//         //填充每一级的children
-//         while (nameArray.length) {
-//             parentRoute = nameRouteMap[childRouteName].route;
-//             childRouteName = childRouteName + '-' + nameArray.shift();
-//             if (!nameRouteMap[childRouteName].visited) {
-//                 nameRouteMap[childRouteName].visited = true;
-//                 parentRoute.children.push(nameRouteMap[childRouteName].route);
-//             }
-//         }
-//     });
-//     return nestedRoutes;
-// }
 
 function runQueue(queue, fn, cb) {
     const step = (index) => {
