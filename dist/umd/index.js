@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v2.0.0
+  * uniapp-router v2.0.1
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -79,7 +79,6 @@
         return str.replace(/^\/|\/$/g, '');
     }
 
-    var prefixSlashRE = /^\/?/;
     // todos add nested route
     function deepClone(data) {
         if (typeof data === 'string') {
@@ -89,28 +88,27 @@
     }
     var RouteMap = /** @class */ (function () {
         function RouteMap(options) {
-            this.routeTable = [];
+            this._routeTable = [];
             if (!options.pagesJSON) {
                 return;
             }
             options.pagesJSON = deepClone(options.pagesJSON);
-            this.routeTable = generateRouterConfigByPagesJson(options.pagesJSON);
+            this._routeTable = generateRouterConfigByPagesJson(options.pagesJSON);
         }
         RouteMap.prototype.resolvePathByName = function (routeName) {
-            var routes = this.routeTable;
+            var routes = this._routeTable;
             var matchedRoute = routes.filter(function (route) {
                 return routeName === route.name;
             });
             return matchedRoute && matchedRoute[0].path;
         };
         RouteMap.prototype.resolveNameByPath = function (routePath) {
-            var routes = this.routeTable;
+            var routes = this._routeTable;
             var matchedRoute = routes.filter(function (route) {
                 return isSamePath(routePath, route.path);
             });
             function isSamePath(path1, path2) {
-                return (path1.replace(prefixSlashRE, '') ===
-                    path2.replace(prefixSlashRE, ''));
+                return removeFirstAndLastSlash(path1) === removeFirstAndLastSlash(path2);
             }
             return matchedRoute && matchedRoute[0].name;
         };
@@ -126,6 +124,7 @@
         function generateRouteConfig(pages, root) {
             if (root === void 0) { root = ''; }
             return pages.reduce(function (config, cur) {
+                cur.path = removeFirstAndLastSlash(cur.path);
                 if (root) {
                     cur.path = root + '/' + cur.path;
                 }

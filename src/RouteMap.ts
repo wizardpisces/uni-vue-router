@@ -14,7 +14,7 @@ function deepClone(data: object | string) {
 }
 export default class RouteMap {
 
-    routeTable: RouteConfigExtended[] = []
+    _routeTable: RouteConfigExtended[] = []
 
     constructor(options: RouterOptions) {
         if (!options.pagesJSON) {
@@ -22,11 +22,11 @@ export default class RouteMap {
             return;
         }
         options.pagesJSON = deepClone(options.pagesJSON);
-        this.routeTable = generateRouterConfigByPagesJson(options.pagesJSON as Uni.PagesJSON)
+        this._routeTable = generateRouterConfigByPagesJson(options.pagesJSON as Uni.PagesJSON)
     }
 
     resolvePathByName(routeName: string): string | undefined {
-        let routes = this.routeTable;
+        let routes = this._routeTable;
 
         let matchedRoute = routes.filter((route: RouteConfig) => {
             return routeName === route.name;
@@ -36,17 +36,14 @@ export default class RouteMap {
     }
 
     resolveNameByPath(routePath: string): string | undefined {
-        let routes = this.routeTable;
+        let routes = this._routeTable;
 
         let matchedRoute = routes.filter((route: RouteConfig) => {
             return isSamePath(routePath, route.path);
         });
 
         function isSamePath(path1: string, path2: string) {
-            return (
-                path1.replace(prefixSlashRE, '') ===
-                path2.replace(prefixSlashRE, '')
-            );
+            return removeFirstAndLastSlash(path1) === removeFirstAndLastSlash(path2)
         }
 
         return matchedRoute && matchedRoute[0].name;
@@ -67,6 +64,8 @@ function generateRouterConfigByPagesJson(pagesJSON: Uni.PagesJSON): RouteConfigE
 
         return pages.reduce((config: RouteConfigExtended[], cur: RouteConfig): RouteConfigExtended[] => {
 
+            cur.path = removeFirstAndLastSlash(cur.path);
+            
             if (root) {
                 cur.path = root + '/' + cur.path
             }

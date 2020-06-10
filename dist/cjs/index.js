@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v2.0.0
+  * uniapp-router v2.0.1
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -53,7 +53,6 @@ function removeFirstAndLastSlash(str) {
     return str.replace(/^\/|\/$/g, '');
 }
 
-const prefixSlashRE = /^\/?/;
 // todos add nested route
 function deepClone(data) {
     if (typeof data === 'string') {
@@ -63,29 +62,28 @@ function deepClone(data) {
 }
 class RouteMap {
     constructor(options) {
-        this.routeTable = [];
+        this._routeTable = [];
         if (!options.pagesJSON) {
             warn(false, 'Please Provide pagesJSON!');
             return;
         }
         options.pagesJSON = deepClone(options.pagesJSON);
-        this.routeTable = generateRouterConfigByPagesJson(options.pagesJSON);
+        this._routeTable = generateRouterConfigByPagesJson(options.pagesJSON);
     }
     resolvePathByName(routeName) {
-        let routes = this.routeTable;
+        let routes = this._routeTable;
         let matchedRoute = routes.filter((route) => {
             return routeName === route.name;
         });
         return matchedRoute && matchedRoute[0].path;
     }
     resolveNameByPath(routePath) {
-        let routes = this.routeTable;
+        let routes = this._routeTable;
         let matchedRoute = routes.filter((route) => {
             return isSamePath(routePath, route.path);
         });
         function isSamePath(path1, path2) {
-            return (path1.replace(prefixSlashRE, '') ===
-                path2.replace(prefixSlashRE, ''));
+            return removeFirstAndLastSlash(path1) === removeFirstAndLastSlash(path2);
         }
         return matchedRoute && matchedRoute[0].name;
     }
@@ -99,6 +97,7 @@ function generateRouterConfigByPagesJson(pagesJSON) {
     }
     function generateRouteConfig(pages, root = '') {
         return pages.reduce((config, cur) => {
+            cur.path = removeFirstAndLastSlash(cur.path);
             if (root) {
                 cur.path = root + '/' + cur.path;
             }
