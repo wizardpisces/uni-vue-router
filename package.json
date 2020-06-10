@@ -1,6 +1,6 @@
 {
   "name": "uni-vue-router",
-  "version": "2.0.0-beta.2",
+  "version": "2.0.0",
   "description": "uniapp router, vue like API",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
