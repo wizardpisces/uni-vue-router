@@ -63,7 +63,7 @@ function parseQuery(query: string): Dictionary<any> {
     return res;
 }
 
-export function stringifyQuery(obj: Dictionary<string>): string {
+export function stringifyQuery(obj: Dictionary<string | any[] | null>): string {
     const res = obj
         ? Object.keys(obj)
               .map(key => {

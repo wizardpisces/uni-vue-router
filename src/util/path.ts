@@ -34,3 +34,8 @@ export function addPrefixSlash(str: string): string {
 export function removeFirstAndLastSlash(str: string) {
     return str.replace(/^\/|\/$/g, '');
 }
+
+
+export function isSamePath(path1: string, path2: string) {
+    return removeFirstAndLastSlash(path1) === removeFirstAndLastSlash(path2)
+}
