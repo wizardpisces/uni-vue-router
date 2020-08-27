@@ -1,7 +1,7 @@
 import { RouteConfig, RouterOptions, RouteConfigExtended, Uni } from './type';
 import { warn } from './util/warn';
 import { NAME_SPLITTER } from './config';
-import { addPrefixSlash, removeFirstAndLastSlash, isSamePath } from './util/path';
+import { addPrefixSlash, removeFirstAndLastSlash, isSamePath, parsePath } from './util/path';
 
 const prefixSlashRE = /^\/?/;
 
@@ -39,6 +39,7 @@ export default class RouteMap {
         let routes = this._routeTable;
 
         let matchedRoute = routes.filter((route: RouteConfig) => {
+            routePath = parsePath(routePath).path;
             return isSamePath(routePath, route.path);
         });
 
