@@ -37,9 +37,8 @@ export default class RouteMap {
 
     resolveNameByPath(routePath: string): string | undefined {
         let routes = this._routeTable;
-
+        routePath = parsePath(routePath).path;
         let matchedRoute = routes.filter((route: RouteConfig) => {
-            routePath = parsePath(routePath).path;
             return isSamePath(routePath, route.path);
         });
 
