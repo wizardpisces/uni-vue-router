@@ -62,6 +62,7 @@ describe('RouteMap: ', () => {
 
     it('resolveNameByPath',()=>{
         expect(routeMap.resolveNameByPath('/pages/a/')).toEqual('pages-a')
+        expect(routeMap.resolveNameByPath('/pages/a?query=1')).toEqual('pages-a')
     })
 
     it('resolvePathByName',()=>{
