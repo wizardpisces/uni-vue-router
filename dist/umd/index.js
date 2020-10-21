@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v2.0.2
+  * uniapp-router v2.0.3
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -392,8 +392,10 @@
                         pathname: locationResolved.pathname,
                         search: locationResolved.search,
                         onCompleteProxy: function (onComplete) {
-                            onComplete && onComplete();
-                            _this.updateRoute(toRoute);
+                            return function () {
+                                onComplete && onComplete();
+                                _this.updateRoute(toRoute);
+                            };
                         },
                     });
                 }

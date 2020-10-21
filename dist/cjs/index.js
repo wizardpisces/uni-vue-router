@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v2.0.2
+  * uniapp-router v2.0.3
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -364,8 +364,10 @@ class BaseRouter {
                     pathname: locationResolved.pathname,
                     search: locationResolved.search,
                     onCompleteProxy: (onComplete) => {
-                        onComplete && onComplete();
-                        this.updateRoute(toRoute);
+                        return () => {
+                            onComplete && onComplete();
+                            this.updateRoute(toRoute);
+                        };
                     },
                 });
             }
