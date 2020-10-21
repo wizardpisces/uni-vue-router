@@ -21,30 +21,26 @@ export const pagesJSON = {
     ]
 }
 
+//setTimeout 在 promise或者await使用时 jest.advanceTimersByTime 无效
 //@ts-ignore
 window.uni = {
-    'navigateTo': async (options: any) => {
-        await sleep(1000);
-        options.success();
+    'navigateTo': (options: any) => {
+        setTimeout(options.success, 1000)
     },
 
-    'switchTab': async (options: any) => {
-        await sleep(1000);
-        options.success();
+    'switchTab': (options: any) => {
+        setTimeout(options.success, 1000)
     },
 
-    'redirectTo': async (options: any) => {
-        await sleep(1000);
-        options.success();
+    'redirectTo': (options: any) => {
+        setTimeout(options.success, 1000)
     },
 
-    'reLaunch': async (options: any) => {
-        await sleep(1000);
-        options.success();
+    'reLaunch': (options: any) => {
+        setTimeout(options.success, 1000)
     },
 
     'navigateBack': async (options: any) => {
-        await sleep(1000);
-        options.success();
+        setTimeout(options.success, 1000)
     }
 }
