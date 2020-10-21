@@ -1,9 +1,3 @@
-export async function sleep(awaitTime: number = 0) {
-    return new Promise((resolve) => {
-        setTimeout(resolve, awaitTime);
-    }) 
-}
-
 export const pagesJSON = {
     pages: [
         {

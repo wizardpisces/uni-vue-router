@@ -1,4 +1,4 @@
-import { pagesJSON, sleep } from './mock-router';
+import { pagesJSON } from './testUtils';
 import UniRouter from '../UniRouter';
 
 let router = new UniRouter({
