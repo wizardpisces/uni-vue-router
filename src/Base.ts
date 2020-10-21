@@ -139,8 +139,10 @@ export default class BaseRouter {
                     pathname: locationResolved.pathname,
                     search: locationResolved.search,
                     onCompleteProxy: (onComplete: VoidFn) => {
-                        onComplete && onComplete();
-                        this.updateRoute(toRoute);
+                        return () => {
+                            onComplete && onComplete();
+                            this.updateRoute(toRoute);
+                        }
                     },
                 });
             } else {
