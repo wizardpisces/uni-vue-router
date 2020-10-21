@@ -1,4 +1,4 @@
-import { pagesJSON, sleep } from './mock-router';
+import { pagesJSON } from './testUtils';
 import BaseRouter from '../Base';
 import { methodMap } from '../config';
 
