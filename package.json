@@ -17,7 +17,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "src/__tests__/*.ts": [
+    "src/__tests__/*.spec.ts": [
       "jest"
     ]
   },
