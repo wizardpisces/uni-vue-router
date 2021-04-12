@@ -18,7 +18,7 @@
   },
   "lint-staged": {
     "src/__tests__/*.spec.ts": [
-      "jest"
+      "test"
     ]
   },
   "engines": {
