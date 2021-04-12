@@ -1,5 +1,5 @@
 /**
-  * uniapp-router v2.0.1
+  * uniapp-router v2.0.3
   * (c) 2020 wizardpisces
   * @license MIT
   */
@@ -52,6 +52,9 @@ function addPrefixSlash(str) {
 function removeFirstAndLastSlash(str) {
     return str.replace(/^\/|\/$/g, '');
 }
+function isSamePath(path1, path2) {
+    return removeFirstAndLastSlash(path1) === removeFirstAndLastSlash(path2);
+}
 
 // todos add nested route
 function deepClone(data) {
@@ -79,12 +82,10 @@ class RouteMap {
     }
     resolveNameByPath(routePath) {
         let routes = this._routeTable;
+        routePath = parsePath(routePath).path;
         let matchedRoute = routes.filter((route) => {
             return isSamePath(routePath, route.path);
         });
-        function isSamePath(path1, path2) {
-            return removeFirstAndLastSlash(path1) === removeFirstAndLastSlash(path2);
-        }
         return matchedRoute && matchedRoute[0].name;
     }
 }
@@ -363,8 +364,10 @@ class BaseRouter {
                     pathname: locationResolved.pathname,
                     search: locationResolved.search,
                     onCompleteProxy: (onComplete) => {
-                        onComplete && onComplete();
-                        this.updateRoute(toRoute);
+                        return () => {
+                            onComplete && onComplete();
+                            this.updateRoute(toRoute);
+                        };
                     },
                 });
             }
