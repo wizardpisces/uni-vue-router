@@ -1,6 +1,6 @@
 {
   "name": "uni-vue-router",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "uniapp router, vue like API",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
@@ -12,6 +12,11 @@
     "prebuild": "rimraf dist .rpt2_cache",
     "build": "rollup -c build/rollup.config.js",
     "release": "bash build/release.sh"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run test"
+    }
   },
   "engines": {
     "node": ">=8.x"
@@ -31,6 +36,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.0",
     "@types/webpack-env": "^1.14.0",
+    "husky": "^2.6.0",
     "jest": "^25.5.4",
     "rimraf": "^3.0.0",
     "rollup": "^1.19.4",

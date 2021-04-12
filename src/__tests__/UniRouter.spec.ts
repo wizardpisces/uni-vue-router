@@ -75,3 +75,28 @@ describe('pushTab', () => {
         expect(router.index).toBe(0);
     })
 })
+
+describe('back', () => {
+    it('back change name and query', () => {
+        const TEST_ID = 'test1';
+        const TEST_ID_b = 'test2'
+        router.push({ 
+            name: 'a',
+            query: {
+                id: TEST_ID
+            }
+        })
+        router.push({ 
+            name: 'b',
+            query: {
+                id: TEST_ID_b
+            }
+        })
+
+        jest.advanceTimersByTime(1000);
+        expect(router.current.path).toBe('/b');
+        expect(router.current.query.id).toBe(TEST_ID_b);
+        router.back();
+        expect(router.current.path).toBe('/a');
+    })
+})
