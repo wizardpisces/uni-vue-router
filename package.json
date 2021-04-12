@@ -15,13 +15,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run test"
+      "pre-push": "npm run test"
     }
-  },
-  "lint-staged": {
-    "src/*": [
-      "test"
-    ]
   },
   "engines": {
     "node": ">=8.x"
