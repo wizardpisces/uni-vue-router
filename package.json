@@ -13,6 +13,9 @@
     "build": "rollup -c build/rollup.config.js",
     "release": "bash build/release.sh"
   },
+  "gitHooks": {
+    "pre-commit": "npm run test"
+  },
   "engines": {
     "node": ">=8.x"
   },
