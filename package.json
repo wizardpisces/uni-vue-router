@@ -14,7 +14,7 @@
     "release": "bash build/release.sh"
   },
   "gitHooks": {
-    "pre-commit": "npm run test"
+    "pre-push": "jest"
   },
   "engines": {
     "node": ">=8.x"
