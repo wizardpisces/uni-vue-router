@@ -20,7 +20,7 @@
   },
   "lint-staged": {
     "src/__tests__/*.*.ts": [
-      "test"
+      "jest"
     ]
   },
   "engines": {
