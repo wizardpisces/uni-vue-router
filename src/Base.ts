@@ -7,6 +7,7 @@ import {
     NextFn,
     Route,
     AfterEachHook,
+    NavigationMethodMapType
 } from './type';
 import RouteMap from './RouteMap'
 import { warn } from './util/warn';
@@ -44,6 +45,13 @@ export default class BaseRouter {
     index: number;
     maxStackSize: number = 50;
     stack: Array<Route>;
+
+     /**
+     * 这个字段主要是提供一个 uniapp的back没法被proxy，监听不到的hack方案
+     * 通过这个字段来标记路由跳转是否通过UniRouter，没有的话就执行路由补丁，详细参加readme.md文档
+     **/
+
+    navigationMethodName: keyof NavigationMethodMapType | '' = '';
 
     cb: Cb = (r: Route) => {};
 
@@ -142,6 +150,9 @@ export default class BaseRouter {
                         return () => {
                             onComplete && onComplete();
                             this.updateRoute(toRoute);
+                            setTimeout(() => {
+                                this.navigationMethodName = ''
+                            }, 1000)
                         }
                     },
                 });

@@ -1,4 +1,4 @@
-import { Route, RawLocation, VoidFn, NavigationMethodMapType, RouterOptions } from './type';
+import { Route, RawLocation, VoidFn, RouterOptions } from './type';
 import { methodMap } from './config';
 import BaseRouter from './Base';
 import { warn } from './util/warn';
@@ -9,13 +9,6 @@ export default class UniRouter extends BaseRouter {
     constructor(options: RouterOptions) {
         super(options);
     }
-
-    /**
-     * 这个字段主要是提供一个 uniapp的back没法被proxy，监听不到的hack方案
-     * 通过这个字段来标记路由跳转是否通过UniRouter，没有的话就执行路由补丁，详细参加readme.md文档
-     **/
-
-    navigationMethodName: keyof NavigationMethodMapType | '' = '';
 
     /**
      *  pushTab的stack处理方式目前的跟 push相同，按照文档 https://uniapp.dcloud.io/api/router?id=switchtab，
@@ -30,13 +23,13 @@ export default class UniRouter extends BaseRouter {
                 this[methodName](location, resolve, reject);
             });
         }
+        this.navigationMethodName = methodName
 
         this.transitionTo(location, (options: any) => {
             uni[methodMap[methodName]]({
                 url: `${options.pathname}${options.search}`,
                 success: options.onCompleteProxy(() => {
                     // this.pushStack(options.route);
-                    this.navigationMethodName = methodName
                     this.stack = [options.route];
                     this.index = 0;
                     onComplete && onComplete();
@@ -54,12 +47,11 @@ export default class UniRouter extends BaseRouter {
                 this[methodName](location, resolve, reject);
             });
         }
-
+        this.navigationMethodName = methodName
         this.transitionTo(location, (options: any) => {
             uni[methodMap[methodName]]({
                 url: `${options.pathname}${options.search}`,
                 success: options.onCompleteProxy(() => {
-                    this.navigationMethodName = methodName
                     this.pushStack(options.route);
                     onComplete && onComplete();
                 }),
@@ -76,12 +68,11 @@ export default class UniRouter extends BaseRouter {
                 this[methodName](location, resolve, reject);
             });
         }
-
+        this.navigationMethodName = methodName
         this.transitionTo(location, (options: any) => {
             uni[methodMap[methodName]]({
                 url: `${options.pathname}${options.search}`,
                 success: options.onCompleteProxy(() => {
-                    this.navigationMethodName = methodName
                     this.stack = this.stack
                         .slice(0, this.index)
                         .concat(options.route);
@@ -100,12 +91,12 @@ export default class UniRouter extends BaseRouter {
                 this[methodName](location, resolve, reject);
             });
         }
+        this.navigationMethodName = methodName
 
         this.transitionTo(location, (options: any) => {
             uni[methodMap[methodName]]({
                 url: `${options.pathname}${options.search}`,
                 success: options.onCompleteProxy(() => {
-                    this.navigationMethodName = methodName
                     this.stack = [options.route];
                     this.index = 0;
                     onComplete && onComplete();
@@ -121,6 +112,7 @@ export default class UniRouter extends BaseRouter {
 
     go(n: number = 0) {
         const methodName = 'back'
+        this.navigationMethodName = methodName
         /**
          * 直接调用uni-app的api，防止目前的stack出现问题导致回退失败，之后再移到transitionTo的回掉里面
          * 因为现在可能导致back无法进行问题的原因（onLoanch,switchTab,back等非UniRouter监控的地方）
@@ -136,13 +128,13 @@ export default class UniRouter extends BaseRouter {
             );
             return;
         }
+
         const route = this.stack[targetIndex];
         return this.transitionTo(route, (options: any) => {
             options.onCompleteProxy(() => {
-                this.navigationMethodName = methodName
                 this.stack = this.stack.slice(0, targetIndex + 1);
                 this.index = targetIndex;
-            })
+            })();
             // uni[methodMap['back']]({
             //     delta: -n
             // });
