@@ -14,7 +14,12 @@
     "release": "bash build/release.sh"
   },
   "gitHooks": {
-    "pre-push": "jest"
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "src/__tests__/*.ts": [
+      "jest"
+    ]
   },
   "engines": {
     "node": ">=8.x"
@@ -49,6 +54,7 @@
     "typescript": "^3.1.1"
   },
   "dependencies": {
+    "lint-staged": "^10.5.4",
     "vue": "^2.6.10"
   }
 }
