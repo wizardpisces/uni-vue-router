@@ -41,7 +41,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.0",
     "@types/webpack-env": "^1.14.0",
-    "husky": "^6.0.0",
+    "husky": "^2.6.0",
     "jest": "^25.5.4",
     "rimraf": "^3.0.0",
     "rollup": "^1.19.4",
