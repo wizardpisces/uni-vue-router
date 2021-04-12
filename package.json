@@ -15,6 +15,7 @@
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
+    
   },
   "lint-staged": {
     "src/__tests__/*.spec.ts": [
