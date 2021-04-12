@@ -13,11 +13,13 @@
     "build": "rollup -c build/rollup.config.js",
     "release": "bash build/release.sh"
   },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "lint-staged": {
-    "src/__tests__/*.spec.ts": [
+    "src/__tests__/*.*.ts": [
       "test"
     ]
   },
@@ -39,6 +41,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.0",
     "@types/webpack-env": "^1.14.0",
+    "husky": "^6.0.0",
     "jest": "^25.5.4",
     "rimraf": "^3.0.0",
     "rollup": "^1.19.4",
