@@ -150,9 +150,6 @@ export default class BaseRouter {
                         return () => {
                             onComplete && onComplete();
                             this.updateRoute(toRoute);
-                            setTimeout(() => {
-                                this.navigationMethodName = ''
-                            }, 1000)
                         }
                     },
                 });
