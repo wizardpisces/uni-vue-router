@@ -19,7 +19,7 @@
     }
   },
   "lint-staged": {
-    "src/__tests__/*.*.ts": [
+    "*": [
       "jest"
     ]
   },
