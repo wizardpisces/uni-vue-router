@@ -1,3 +1,4 @@
+console.log('jest');
 module.exports = {
     preset: 'ts-jest',
     globals: {
